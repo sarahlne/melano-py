@@ -1,0 +1,10 @@
+{
+    "name"                          : "melano",
+    
+    
+    "db_dir"                        : "./data",
+    "db_name"                       : "db.melano",
+
+    "melano.clindata_dir"           : "../clinical-studies/",
+    "melano_testdata_dir"           : "../tests/data/"
+}
