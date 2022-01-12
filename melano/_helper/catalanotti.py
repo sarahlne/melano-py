@@ -53,18 +53,26 @@ class Catalanotti():
         table_sex = table['Sex']
         table_sex = table_sex.replace(['M','F'],['male', 'female'])
 
+        table_LDH = table['LDH (1=high, 0=WNL)']
+        table_LDH = table_LDH.replace([0,1], ['normal', 'elevated'])
+
+        table_OS = table['OS NEW Alive (0) Dead (1)']
+        table_OS = table_OS.replace([0,1], ['alive', 'dead'])
+
         clark_level_dict = {'II': 0, 'III': 1, 'IV': 2, 'V': 3}
         table_stage = table['Stage'].tolist()
         table_stage = [elem[0:3] for elem in table_stage]
         table_stage = [clark_level_dict[elem] for elem in table_stage]
 
+        table_brain_met = table['Brain mets (Yes=1; no=0)']
+        table_brain_met = table_brain_met.replace([0,1],['no', 'yes'])
 
         table_immuno_bool = table['Immunotherapy'].tolist()
         for i in range(len(table_immuno_bool)):
             if(table_immuno_bool[i]=='no'):
-                table_immuno_bool[i] = 0
+                table_immuno_bool[i] = 'no'
             else:
-                table_immuno_bool[i] = 1
+                table_immuno_bool[i] = 'yes'
 
         # create dictionnaries
         for ind in table.index:
@@ -72,15 +80,15 @@ class Catalanotti():
                 sex = table_sex[ind],
                 age = table['Age'][ind],
                 stage = table_stage[ind],
-                LDH = table['LDH (1=high, 0=WNL)'][ind],
-                os_statut = table['OS NEW Alive (0) Dead (1)'][ind],
+                LDH = table_LDH[ind],
+                os_statut = table_OS[ind],
                 os_months = table['OS (Months)'][ind],
                 pfs = table['PFS (months)'][ind],
                 braf_mut = table['BRAF Mutation'][ind],
                 disease_control_rate = table['Response'][ind],
                 prelevement_temporality = table['timing'][ind],
                 drug = table['Drug'][ind],
-                brain_metastasis = table['Brain mets (Yes=1; no=0)'][ind],
+                brain_metastasis = table_brain_met[ind],
                 immunotherapy_treatment = table_immuno_bool[ind],
                 immunotherapy_mol = table['Immunotherapy'][ind],
                 source = dict(

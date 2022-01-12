@@ -29,14 +29,14 @@ class Patients(PWModel):
     sex = CharField(null=True, index=True)
     age = IntegerField(null=True, index=True)
     stage = IntegerField(null=True, index=True)
-    LDH = IntegerField(null=True, index=True)
-    OS_statut = IntegerField(null=True, index=True)
+    LDH = CharField(null=True, index=True)
+    OS_statut = CharField(null=True, index=True)
     OS_month = FloatField(null=True, index=True)
     PFS_month = FloatField(null=True, index=True)
     drug = CharField(null=True, index=True)
     disease_control_rate = CharField(null=True, index=True)
     BRAF_mut=CharField(null=True, index=True)
-    brain_metastasis = IntegerField(null=True, index=True)
+    brain_metastasis = CharField(null=True, index=True)
     immunotherapy_treatment = IntegerField(null=True, index=True)
     source = JSONField(null=True)
 
@@ -50,7 +50,6 @@ class Patients(PWModel):
 
         b = Blateau()
         list_pat_blateau = b.parse_xlsx_from_file(dir+file['blateau_file'])
-        print(list_pat_blateau)
 
         c = Catalanotti()
         list_pat_catalanotti = c.parse_xlsx_from_file(dir+file['catalanotti_file'])

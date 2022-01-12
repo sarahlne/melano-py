@@ -28,11 +28,3 @@ files = dict(
 p1.fetch_patients_and_create(data_dir, files)
 
 
-# #Create database
-# db = SqliteDatabase('test_db.db')
-
-# # Connect to our database.
-# db.connect()
-
-# # Create the tables.
-# db.create_tables([User, Tweet])

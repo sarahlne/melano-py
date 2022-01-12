@@ -55,11 +55,23 @@ class Blateau():
         table_sexe = table['sexe']
         table_sexe = table_sexe.replace([0,1], ['male', 'female'])
 
+        table_LDH = table['LDH (normales = 0, augmentées = 1)']
+        table_LDH = table_LDH.replace([0,1], ['normal', 'elevated'])
+
+        table_OS = table['Statut OS (0 = neg; 1 = death)']
+        table_OS = table_OS.replace([0,1], ['alive', 'dead'])
+
         table_disease_control_rate = table['Statut (0= stable disease, 1= progression, 2= partial response, 3= complete response)']
         table_disease_control_rate = table_disease_control_rate.replace([0,1,2,3],['SD', 'PD', 'PR', 'CR'])
 
         table_braf_mut = table['Mut BRAF (0=V600E, 1=V600K)']
         table_braf_mut = table_braf_mut.replace([0,1],['V600E', 'V600K'])
+
+        table_brain_met = table['Méta cérébrales (0=neg, 1= event)']
+        table_brain_met = table_brain_met.replace([0,1],['no', 'yes'])
+
+        table_immuno_T = table['Immunothérapie (0=neg, 1=event)']
+        table_immuno_T = table_immuno_T.replace([0,1],['no', 'yes'])
 
         list_dabrafenib = table.index[table['DABRAFENIB']==True].to_list()
         list_vemurafenib = table.index[table['VEMURAFENIB']==True].to_list()
@@ -80,16 +92,16 @@ class Blateau():
                 sex = table_sexe[ind],
                 age = table['age'][ind],
                 stage = table['Clark level\n0=II; 1=III; 2=IV; 3=V'][ind],
-                LDH = table['LDH (normales = 0, augmentées = 1)'][ind],
-                os_statut = table['Statut OS (0 = neg; 1 = death)'][ind],
+                LDH = table_LDH[ind],
+                os_statut = table_OS[ind],
                 os_months = (table['OS'][ind])/12,
                 pfs = table['PFS en mois'][ind],
                 braf_mut = table_braf_mut[ind],
                 disease_control_rate = table_disease_control_rate[ind],
                 #prelevement_temporality = 'only before treatment',
                 drug = table_agent[ind],
-                brain_metastasis = table['Méta cérébrales (0=neg, 1= event)'][ind],
-                immunotherapy_treatment = table['Immunothérapie (0=neg, 1=event)'][ind],
+                brain_metastasis = table_brain_met[ind],
+                immunotherapy_treatment = table_immuno_T[ind],
                 source = dict(
                     title = 'TERT Promoter Mutation as an Independent Prognostic Marker for Poor Prognosis MAPK Inhibitors-Treated Melanoma',
                     author =  'Pauline Blateau, Jerome Solassol',

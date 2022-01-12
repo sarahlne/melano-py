@@ -48,7 +48,11 @@ class Yan():
         table_sex = table['Sex']
         table_sex = table_sex.replace(['Male','Female'],['male', 'female'])
 
-        table_LDH = table['LDH'].replace(['Normal','Elevated'], ['0', '1'])
+        table_OS = table['OS Censor']
+        table_OS = table_OS.replace([0,1], ['alive', 'dead'])
+
+        table_LDH = table['LDH'].replace(['Normal','Elevated'], ['normal', 'elevated'])
+
 
         # create dictionnaries
         for ind in table.index:
@@ -57,7 +61,7 @@ class Yan():
                 age = table['Age'][ind],
                 stage = np.NaN,
                 LDH = table_LDH[ind],
-                os_statut = table['OS Censor'][ind],
+                os_statut = table_OS[ind],
                 os_months = table['OS (Months)'][ind],
                 pfs = table['PFS (Months)'][ind],
                 braf_mut = table['BRAF V600 Mut'][ind],
@@ -75,7 +79,6 @@ class Yan():
                     date = 2019)  
             )
             for (key, value) in patient_dict.items():
-                print(key, value)
                 if (pd.isna(value)):
                     patient_dict[key]=None
             

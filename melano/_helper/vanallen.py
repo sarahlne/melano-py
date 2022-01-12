@@ -65,7 +65,6 @@ class VanAllen():
                     date = 2019)  
             )
             for (key, value) in patient_dict.items():
-                print(key, value)
                 if (pd.isna(value)):
                     patient_dict[key]=None
 
