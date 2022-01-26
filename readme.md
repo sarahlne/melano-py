@@ -1,10 +1,13 @@
 # Melano
 
-This software is the wore library to manage MelanoModel knowledge databases. <br />
+This tool is the wore library to manage MelanoModel knowledge databases. <br />
 
-The purpose of Melano is to collect clinical data from clinical informations and to create a reference database. <br />
+The purpose of melano-py is to collect clinical data from clinical informations and to create a reference database. <br />
 
 This module has been implemented in python 3.9
+
+### Class diagram
+![Alt text](./diagram.PNG "Class diagramm")
 
 ### Dependencies:
 

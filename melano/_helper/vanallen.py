@@ -4,6 +4,7 @@ import os
 import pathlib
 import pandas as pd
 import numpy as np
+import json
 
 
 ############################################################################################
@@ -11,6 +12,19 @@ import numpy as np
 #                                        Van Allen class
 #                                         
 ############################################################################################
+
+class NpEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, np.nan):
+            return None
+        else:
+            return super(NpEncoder, self).default(obj)
 
 class VanAllen():
     """
@@ -43,6 +57,7 @@ class VanAllen():
         # create dictionnaries
         for ind in table.index:
             patient_dict=dict(
+                patient_ID = table['PATIENT_ID'][ind],
                 sex = table_sex[ind],
                 age = table['AGE'][ind],
                 stage = np.NaN,
@@ -72,3 +87,51 @@ class VanAllen():
 
         print('the list of "Van Allen" patients has been created')
         return(list_patients)
+
+    def parse_mutation_from_file(self, file_mutation_path):
+        list_van_allen_mutations = []
+
+        table_mutations_extended = pd.read_csv(file_mutation_path, header=0, sep='\t')
+
+        table_IDs = table_mutations_extended[['Tumor_Sample_Barcode']]
+        list_patients = []
+        list_treatment = []
+        for ind in table_IDs.index:
+            list_patients.append(re.match('Pat_\d{2}', table_IDs['Tumor_Sample_Barcode'][ind]).group(0))
+            if(re.match('Pat_\d{2}_Pre', table_IDs['Tumor_Sample_Barcode'][ind])):
+                list_treatment.append('pre treatment')
+            elif(re.match('Pat_\d{2}_Post', table_IDs['Tumor_Sample_Barcode'][ind])):
+                list_treatment.append('post treatment')
+
+
+        table_IDs.insert(loc=0, column='Patient_ID', value=list_patients)
+        table_IDs.insert(loc=0, column='Treatment', value=list_treatment)
+
+        #create mutations dictionaries
+        for ind in table_mutations_extended.index:
+            snp_dict = dict(
+                sample_ID = table_mutations_extended['Tumor_Sample_Barcode'][ind],
+                patient_ID = table_IDs['Patient_ID'][ind],
+                HGNC = table_mutations_extended['Hugo_Symbol'][ind],
+                Consequence = table_mutations_extended['Consequence'][ind],
+                Variant_Classification = table_mutations_extended['Variant_Classification'][ind],
+                Chromosome = table_mutations_extended['Chromosome'][ind],
+                mutated = 'yes',
+                temporality = table_IDs['Treatment'][ind],
+                source = dict(
+                    title = 'The Genetic Landscape of Clinical Resistance to RAF Inhibition in Metastatic Melanoma',
+                    author =  'Eliezer M. Van Allen, Dirk Schadendorf',
+                    journal =  'Cancer Discovery',
+                    location = 'United States, Germany',
+                    date = 2019)
+            )
+
+            for (key, value) in snp_dict.items():
+                if (pd.isna(value)):
+                    snp_dict[key]=None
+
+            convert_dict = json.dumps(snp_dict, cls=NpEncoder)
+            list_van_allen_mutations.append(json.loads(convert_dict))
+
+        print('the list of "Van Allen" mutations has been created')
+        return(list_van_allen_mutations)

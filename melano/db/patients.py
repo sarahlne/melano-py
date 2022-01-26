@@ -26,9 +26,11 @@ class Patients(PWModel):
     #save_datetime = DateTimeField()
     type = CharField(null=True, index=True)
 
+    patient_ID = CharField(null=True, index=True)
     sex = CharField(null=True, index=True)
     age = IntegerField(null=True, index=True)
-    stage = IntegerField(null=True, index=True)
+    AJCC_stage = IntegerField(null=True, index=True)
+    M_stage = CharField(null=True, index=True)
     LDH = CharField(null=True, index=True)
     OS_statut = CharField(null=True, index=True)
     OS_month = FloatField(null=True, index=True)
@@ -42,24 +44,24 @@ class Patients(PWModel):
 
     #_table_name = 'Patients'
 
-    def fetch_patients_and_create(cls, dir, file):
+    def fetch_patients_and_create(cls, settings_data):
         from _helper.blateau import Blateau
         from _helper.catalanotti import Catalanotti
         from _helper.vanallen import VanAllen
         from _helper.yan import Yan
 
         b = Blateau()
-        list_pat_blateau = b.parse_xlsx_from_file(dir+file['blateau_file'])
+        list_pat_blateau = b.parse_xlsx_from_file(settings_data['blateau_file'], 'patients')
 
         c = Catalanotti()
-        list_pat_catalanotti = c.parse_xlsx_from_file(dir+file['catalanotti_file'])
+        list_pat_catalanotti = c.parse_xlsx_from_file(settings_data['catalanotti_file'], settings_data['catalanotti_clinical_sample'])
 
         v = VanAllen()
-        list_pat_vanallen = v.parse_xlsx_from_file(dir+file['van_allen_file'])
+        list_pat_vanallen = v.parse_xlsx_from_file(settings_data['van_allen_file'])
 
         y = Yan()
-        list_pat_yan = y.parse_xlsx_from_file(dir+file['yan_ribas_file'])
-
+        list_pat_yan = y.parse_xlsx_from_file(settings_data['yan_ribas_file'])
+        
         cls.create_patients_table_from_list(list_pat_blateau)
         cls.create_patients_table_from_list(list_pat_catalanotti)
         cls.create_patients_table_from_list(list_pat_vanallen)
@@ -70,9 +72,12 @@ class Patients(PWModel):
         for dico in list_pt:
             pat = cls(data=dico)
             pat.type = type(pat)
+            pat.set_pat_id(dico["patient_ID"])
             pat.set_sex(dico["sex"])
             pat.set_age(dico["age"])
-            pat.set_stage(dico["stage"])
+            pat.set_AJCC_stage(dico["stage"])
+            if ('M_stage' in pat.data.keys()):
+                pat.set_M_stage(pat.data['M_stage'])
             pat.set_LDH(dico['LDH'])
             pat.set_os_statut(dico['os_statut'])
             pat.set_os_month(dico['os_months'])
@@ -95,6 +100,16 @@ class Patients(PWModel):
             
         #cls.save_all(patients)
 
+    def set_pat_id(self, pat_id):
+        if(pat_id):
+            """
+            Sets the name of the go term
+
+            :param name: The name
+            :type name: str
+            """
+            self.patient_ID = pat_id
+
     def set_sex(self, sex):
         if(sex):
             """
@@ -115,7 +130,7 @@ class Patients(PWModel):
             """
             self.age = age
 
-    def set_stage(self, stage):
+    def set_AJCC_stage(self, stage):
         if(stage is not None):
             """
             Sets the name of the go term
@@ -123,7 +138,17 @@ class Patients(PWModel):
             :param name: The name
             :type name: str
             """
-            self.stage = stage
+            self.AJCC_stage = stage
+
+    def set_M_stage(self, m_stage):
+        if(m_stage is not None):
+            """
+            Sets the name of the go term
+
+            :param name: The name
+            :type name: str
+            """
+            self.M_stage = m_stage
 
     def set_LDH(self, LDH):
         if(LDH is not None):

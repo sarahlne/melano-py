@@ -21,7 +21,7 @@ class NpEncoder(json.JSONEncoder):
         elif isinstance(obj, np.ndarray):
             return obj.tolist()
         elif isinstance(obj, np.nan):
-            return None
+            return None 
         else:
             return super(NpEncoder, self).default(obj)
 
@@ -31,7 +31,7 @@ class Catalanotti():
     This module allows to get list of dictionnaries where terms represents patients
     """
 
-    def parse_xlsx_from_file(self, file_path): #file_path2
+    def parse_xlsx_from_file(self, file_path, file_clinical_sample_path): #file_path2
         """
         Read the csv file extract from the clinical study (Fichier_melanome_RL.xlsx) and returns a list of dictionnaries
         where terms represent proteins filled with their informations (age, sex, stage, etc...). 
@@ -74,12 +74,21 @@ class Catalanotti():
             else:
                 table_immuno_bool[i] = 'yes'
 
+
+        table_clinical_sample = pd.read_csv(file_clinical_sample_path, header=4, sep='\t')
+        dict_patient_sample = {}
+        for i in range(0,len(table_clinical_sample)):
+            dict_patient_sample[table_clinical_sample['SAMPLE_ID'][i]] = table_clinical_sample['PATIENT_ID'][i]
+
         # create dictionnaries
         for ind in table.index:
             patient_dict=dict(
+                patient_ID = dict_patient_sample[table['Berger ID'][ind]],
                 sex = table_sex[ind],
                 age = table['Age'][ind],
-                stage = table_stage[ind],
+                stage = re.sub("[ABCc]","",table['Stage'][ind]),
+                M_stage = str(table['M status'][ind]).upper(),
+                sample_ID = table['Berger ID'][ind],
                 LDH = table_LDH[ind],
                 os_statut = table_OS[ind],
                 os_months = table['OS (Months)'][ind],
@@ -101,6 +110,9 @@ class Catalanotti():
             for (key, value) in patient_dict.items():
                 if (pd.isna(value)):
                     patient_dict[key]=None
+                if (isinstance(value, str)):
+                    if(value=='NAN'):
+                        patient_dict[key]=None
 
             convert_dict = json.dumps(patient_dict, cls=NpEncoder)
 
@@ -108,3 +120,37 @@ class Catalanotti():
 
         print('the list of "Catalanotti" patients has been created')
         return(list_patients)
+
+
+    def parse_mutations_from_file(self, file_mutation_path, file_clinical_sample_path):
+        list_catalanotti_mutations = []
+        
+        table_mutations_extended = pd.read_csv(file_mutation_path, header=0, sep='\t')
+
+        table_clinical_sample = pd.read_csv(file_clinical_sample_path, header=4, sep='\t')
+        dict_patient_sample = {}
+        for i in range(0,len(table_clinical_sample)):
+            dict_patient_sample[table_clinical_sample['SAMPLE_ID'][i]] = table_clinical_sample['PATIENT_ID'][i]
+
+        #create mutations dictionaries
+        for ind in table_mutations_extended.index:
+            snp_dict = dict(
+                sample_ID = table_mutations_extended['Tumor_Sample_Barcode'][ind],
+                patient_ID = dict_patient_sample[table_mutations_extended['Tumor_Sample_Barcode'][ind]],
+                HGNC = table_mutations_extended['Hugo_Symbol'][ind],
+                Consequence = table_mutations_extended['Consequence'][ind],
+                Variant_Classification = table_mutations_extended['Variant_Classification'][ind],
+                Chromosome = table_mutations_extended['Chromosome'][ind],
+                mutated = 'yes',
+                temporality = 'pre treatment',
+                source = dict(
+                    title = 'PTEN Loss-of-Function Alterations Are Associated With Intrinsic Resistance to BRAF Inhibitors in Metastatic Melanoma',
+                    author =  'Federica Catalanotti, David B. Solit',
+                    journal =  'JCO Precision Oncology',
+                    location = 'New York (United States)',
+                    date = 2017)
+            )
+            list_catalanotti_mutations.append(snp_dict)
+
+        print('the list of "Catalanotti" mutations has been created')
+        return(list_catalanotti_mutations)

@@ -33,7 +33,7 @@ class Blateau():
     This module allows to get list of dictionnaries where terms represents patients
     """
 
-    def parse_xlsx_from_file(self, file_path):
+    def parse_xlsx_from_file(self, file_path, cond):
         """
         Read the csv file extract from the clinical study (Fichier_melanome_RL.xlsx) and returns a list of dictionnaries
         where terms represent proteins filled with their informations (age, sex, stage, etc...). 
@@ -42,9 +42,8 @@ class Blateau():
         :rtype: list
         """
 
-        print('Parse information from file ', file_path)
-
         list_patients = []
+        list_snps = []
 
         # import table
         table = pd.read_excel(file_path, header=0)
@@ -54,6 +53,9 @@ class Blateau():
         
         table_sexe = table['sexe']
         table_sexe = table_sexe.replace([0,1], ['male', 'female'])
+
+        table_AJCC = table["AJCC à l'initiation du traitement\n0=I; 1=II; 2=III; 3=IV"]
+        table_AJCC = table_AJCC.replace([0,1,2,3],['I','II','III','IV'])
 
         table_LDH = table['LDH (normales = 0, augmentées = 1)']
         table_LDH = table_LDH.replace([0,1], ['normal', 'elevated'])
@@ -85,13 +87,18 @@ class Blateau():
         table_agent[list_vemurafenib_cobimetinib] = 'vemurafenib + cobimetinib'
         "Clark level0=II; 1=III; 2=IV; 3=V"
 
+        pat_prefix = 'BS'
+        sample_prefix= 'BSAM'
 
-        # create dictionnaries
+        # create dictionnaries for patients and their snps
+
+        # PATIENTS
         for ind in table.index:
             patient_dict=dict(
+                patient_ID=pat_prefix+f"{ind:03}",
                 sex = table_sexe[ind],
                 age = table['age'][ind],
-                stage = table['Clark level\n0=II; 1=III; 2=IV; 3=V'][ind],
+                stage = table_AJCC[ind],
                 LDH = table_LDH[ind],
                 os_statut = table_OS[ind],
                 os_months = (table['OS'][ind])/12,
@@ -117,5 +124,28 @@ class Blateau():
 
             list_patients.append(json.loads(convert_dict))
 
-        print('the list of "Blateau" patients has been created')
-        return(list_patients)
+        # SNPS
+            mutations=table.iloc[ind,41:]
+            mutations=mutations.replace(to_replace=(0,1), value=('no', 'yes'))
+            for i in range(0,len(mutations)):
+                snp_dict=dict(
+                    sample_ID=sample_prefix+f"{ind:03}",
+                    patient_ID=pat_prefix+f"{ind:03}",
+                    HGNC = mutations.index[i],
+                    mutated = mutations[i],
+                    temporality = 'pre treatment',
+                    source = dict(
+                        title = 'TERT Promoter Mutation as an Independent Prognostic Marker for Poor Prognosis MAPK Inhibitors-Treated Melanoma',
+                        author =  'Pauline Blateau, Jerome Solassol',
+                        journal =  'Cancers',
+                        location = 'Montpellier (France)',
+                        date = 2020)
+                )
+                list_snps.append(snp_dict)
+
+        if (cond=='patients'):
+            print('the list of "Blateau" patients has been created')
+            return(list_patients)
+        elif(cond=='mutations'):
+            print('the list of "Blateau" mutations has been created')
+            return(list_snps)

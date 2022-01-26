@@ -1,10 +1,26 @@
 {
     "name"                          : "melano",
+    "title"                         : "Melanomodel DB",
+    "authors"                       : "Sarah Dandou",
+    "version"                       : "0.1",
     
     
     "db_dir"                        : "./data",
     "db_name"                       : "db.melano",
 
     "melano.clindata_dir"           : "../clinical-studies/",
-    "melano_testdata_dir"           : "../tests/data/"
+    "melano_testdata_dir"           : "../tests/data/",
+
+    "clinical_studies" : {
+        "blateau_file"                  : "../clinical-studies/blateau&solassol_Cancers-2020/blateau&solassol_Cancers-2020/Fichier_melanome_RL.xlsx",
+        "catalanotti_file"              : "../clinical-studies/catalanotti&solit_jcopo_2017/ds_16.00054-3.xlsx",
+        "catalanotti_clinical_patient"  : "../clinical-studies/catalanotti&solit_jcopo_2017/catalanotti&solit_jcopo_2017/skcm_vanderbilt_mskcc_2015/data_clinical_patient.txt",
+        "catalanotti_clinical_sample"   : "../clinical-studies/catalanotti&solit_jcopo_2017/catalanotti&solit_jcopo_2017/skcm_vanderbilt_mskcc_2015/data_clinical_sample.txt",
+        "catalanotti_mutations_extended": "../clinical-studies/catalanotti&solit_jcopo_2017/catalanotti&solit_jcopo_2017/skcm_vanderbilt_mskcc_2015/data_mutations_extended.txt",
+        "van_allen_file"                : "../clinical-studies/van-allen&schadendorf_cancer-discovery_2014/van-allen&schadendorf_cancer-discovery_2014/skcm_broad_brafresist_2012/data_clinical_patient.txt",
+        "van_allen_mutations_file"      : "../clinical-studies/van-allen&schadendorf_cancer-discovery_2014/van-allen&schadendorf_cancer-discovery_2014/skcm_broad_brafresist_2012/data_mutations_extended.txt",
+        "yan_ribas_file"                : "../clinical-studies/yan&ribas_Clin-Can-Res_2019/yan&ribas_Clin-Can-Res_2019/198021_2_supp_5455023_ppszzf.csv"
+    },
+
+    "log_file"                      : "./melano/melanomodeldb.log"
 }

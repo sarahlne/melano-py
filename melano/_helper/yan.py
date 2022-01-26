@@ -57,9 +57,11 @@ class Yan():
         # create dictionnaries
         for ind in table.index:
             patient_dict=dict(
+                patient_ID = table['Patient ID'][ind],
                 sex = table_sex[ind],
                 age = table['Age'][ind],
                 stage = np.NaN,
+                M_stage = table['Stage'][ind],
                 LDH = table_LDH[ind],
                 os_statut = table_OS[ind],
                 os_months = table['OS (Months)'][ind],
