@@ -80,13 +80,16 @@ class Catalanotti():
         for i in range(0,len(table_clinical_sample)):
             dict_patient_sample[table_clinical_sample['SAMPLE_ID'][i]] = table_clinical_sample['PATIENT_ID'][i]
 
+        table_drug = table['Drug']
+        table_drug = table_drug.replace(['vem+cob (leukemia patient)'], ['vemurafenib + cobimetinib'])
+
         # create dictionnaries
         for ind in table.index:
             patient_dict=dict(
                 patient_ID = dict_patient_sample[table['Berger ID'][ind]],
                 sex = table_sex[ind],
                 age = table['Age'][ind],
-                stage = re.sub("[ABCc]","",table['Stage'][ind]),
+                stage = re.sub("[ABCc]","",table['Stage'][ind]), # remettre le C
                 M_stage = str(table['M status'][ind]).upper(),
                 sample_ID = table['Berger ID'][ind],
                 LDH = table_LDH[ind],
@@ -96,7 +99,7 @@ class Catalanotti():
                 braf_mut = table['BRAF Mutation'][ind],
                 disease_control_rate = table['Response'][ind],
                 prelevement_temporality = table['timing'][ind],
-                drug = table['Drug'][ind],
+                drug = table_drug[ind],
                 brain_metastasis = table_brain_met[ind],
                 immunotherapy_treatment = table_immuno_bool[ind],
                 immunotherapy_mol = table['Immunotherapy'][ind],

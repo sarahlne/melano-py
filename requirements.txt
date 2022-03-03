@@ -2,3 +2,6 @@ peewee
 starlette
 numpy
 pandas
+json
+sqlalchemy
+streamlit

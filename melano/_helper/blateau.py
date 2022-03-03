@@ -101,7 +101,7 @@ class Blateau():
                 stage = table_AJCC[ind],
                 LDH = table_LDH[ind],
                 os_statut = table_OS[ind],
-                os_months = (table['OS'][ind])/12,
+                os_months = (table['OS'][ind])/30,
                 pfs = table['PFS en mois'][ind],
                 braf_mut = table_braf_mut[ind],
                 disease_control_rate = table_disease_control_rate[ind],

@@ -53,6 +53,7 @@ class Yan():
 
         table_LDH = table['LDH'].replace(['Normal','Elevated'], ['normal', 'elevated'])
 
+        table_AJCC_Stage = table['Stage'].replace(['M1A','M1B', 'M1C', 'Unresectable', 'IIIC', 'Unresectable Stage IIIC'], ['IV', 'IV', 'IV', 'IV', 'III', 'III'])
 
         # create dictionnaries
         for ind in table.index:
@@ -60,7 +61,7 @@ class Yan():
                 patient_ID = table['Patient ID'][ind],
                 sex = table_sex[ind],
                 age = table['Age'][ind],
-                stage = np.NaN,
+                stage = table_AJCC_Stage[ind],
                 M_stage = table['Stage'][ind],
                 LDH = table_LDH[ind],
                 os_statut = table_OS[ind],
