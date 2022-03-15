@@ -63,7 +63,7 @@ len_patients = Patients.select().count()
 elapsed_time = time.time() - start_time
 logger.info("... done in {:10.2f} min for #patients = {}".format(elapsed_time/60, len_patients))
 
-# ----------------- Create SNPs ----------------- #
+ # ----------------- Create SNPs ----------------- #
 logger.info("Step 2 | Loading SNPs ...")
 start_time = time.time()
 snp1.fetch_snps_and_create(settings_data['clinical_studies'])

@@ -5,8 +5,9 @@
     "version"                       : "0.1",
     
     
-    "db_dir"                        : "./data",
-    "db_name"                       : "db.melano",
+    "db_dir"                        : "./melano/data/",
+    "db_name"                       : "dbmelano.db",
+    "db_test_name"                  : "test_melanodb.db",
 
     "melano.clindata_dir"           : "../clinical-studies/",
     "melano_testdata_dir"           : "../tests/data/",

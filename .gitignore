@@ -2,3 +2,6 @@
 **.log
 test_db.db
 test_melanodb.db
+**.ipynb
+jupyter_notebooks/
+**.db

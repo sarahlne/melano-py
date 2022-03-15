@@ -6,7 +6,11 @@ from peewee import Field, IntegerField, DateField, DateTimeField, CharField, For
 from peewee import SqliteDatabase
 from playhouse.sqlite_ext import JSONField
 
-db = SqliteDatabase('test_melanodb.db')
+#import settings data
+with open('settings.json') as setting_file:
+    settings_data=json.load(setting_file)
+
+db = SqliteDatabase(settings_data['db_dir']+settings_data['db_test_name'])
 
 class Mutations(PWModel):
 
