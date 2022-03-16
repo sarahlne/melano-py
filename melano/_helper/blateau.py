@@ -63,6 +63,8 @@ class Blateau():
         table_OS = table['Statut OS (0 = neg; 1 = death)']
         table_OS = table_OS.replace([0,1], ['alive', 'dead'])
 
+        table_PFS_statut = table['Progression sous traitement (0=neg; 1 = event)'].convert_dtypes(convert_floating=False)
+
         table_disease_control_rate = table['Statut (0= stable disease, 1= progression, 2= partial response, 3= complete response)']
         table_disease_control_rate = table_disease_control_rate.replace([0,1,2,3],['SD', 'PD', 'PR', 'CR'])
 
@@ -102,6 +104,7 @@ class Blateau():
                 LDH = table_LDH[ind],
                 os_statut = table_OS[ind],
                 os_months = (table['OS'][ind])/30,
+                pfs_statut = str(table_PFS_statut[ind]),
                 pfs = table['PFS en mois'][ind],
                 braf_mut = table_braf_mut[ind],
                 disease_control_rate = table_disease_control_rate[ind],

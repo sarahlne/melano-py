@@ -43,7 +43,7 @@ class VanAllen():
 
         # import table
         table = pd.read_csv(file_path, sep = '\t', header=4)
-        table = table.drop([2])
+        table = table.drop([1])
         table=table.reset_index(drop=True)
 
         table['MEDICATION']=table['MEDICATION'].replace(np.nan, 'unknow')
@@ -53,6 +53,8 @@ class VanAllen():
         # change values of some table columns 
         table_sex = table['SEX']
         table_sex = table_sex.replace(['Male','Female'],['male', 'female'])
+
+        table_pfs_statut = table['EARLY_RESISTANCE'].replace(['No', 'Yes'],['0','1'])
 
         # create dictionnaries
         for ind in table.index:
@@ -64,6 +66,7 @@ class VanAllen():
                 LDH = np.NaN,
                 os_statut = np.NaN,
                 os_months = np.NaN,
+                pfs_statut = str(table_pfs_statut[ind]),
                 pfs = (table['DURATION_OF_THERAPY_WEEKS'][ind])/4,
                 braf_mut = np.NaN,
                 disease_control_rate = table['TREATMENT_BEST_RESPONSE'][ind],

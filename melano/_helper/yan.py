@@ -66,6 +66,7 @@ class Yan():
                 LDH = table_LDH[ind],
                 os_statut = table_OS[ind],
                 os_months = table['OS (Months)'][ind],
+                pfs_statut = str(int(table['PFS Censor'][ind])),
                 pfs = table['PFS (Months)'][ind],
                 braf_mut = table['BRAF V600 Mut'][ind],
                 disease_control_rate = table['BORR'][ind],

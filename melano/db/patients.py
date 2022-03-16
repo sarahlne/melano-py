@@ -38,6 +38,7 @@ class Patients(PWModel):
     LDH = CharField(null=True, index=True)
     OS_statut = CharField(null=True, index=True)
     OS_month = FloatField(null=True, index=True)
+    PFS_statut=CharField(null=True, index=True)
     PFS_month = FloatField(null=True, index=True)
     drug = CharField(null=True, index=True)
     disease_control_rate = CharField(null=True, index=True)
@@ -85,6 +86,7 @@ class Patients(PWModel):
             pat.set_LDH(dico['LDH'])
             pat.set_os_statut(dico['os_statut'])
             pat.set_os_month(dico['os_months'])
+            pat.set_pfs_statut(dico['pfs_statut'])
             pat.set_pfs(dico['pfs'])
             pat.set_drug(dico['drug'])
             pat.set_DCR(dico['disease_control_rate'])
@@ -184,6 +186,10 @@ class Patients(PWModel):
             :type name: str
             """
             self.OS_month = round(os_month,1)
+    
+    def set_pfs_statut(self,pfs_statut):
+        if(pfs_statut):
+            self.PFS_statut = pfs_statut
     
     def set_pfs(self, pfs):
         if(pfs):

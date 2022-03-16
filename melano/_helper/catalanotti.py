@@ -95,6 +95,7 @@ class Catalanotti():
                 LDH = table_LDH[ind],
                 os_statut = table_OS[ind],
                 os_months = table['OS (Months)'][ind],
+                pfs_statut = str(int(table['POD on vem 1=YES; 0=NO'][ind])),
                 pfs = table['PFS (months)'][ind],
                 braf_mut = table['BRAF Mutation'][ind],
                 disease_control_rate = table['Response'][ind],
